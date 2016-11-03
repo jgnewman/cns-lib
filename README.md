@@ -1,2 +1,3 @@
 # cns-lib
-Library functions for the Cream &amp; Sugar language
+
+Library functions for the Cream & Sugar language
