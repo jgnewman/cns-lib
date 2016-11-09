@@ -1,10 +1,10 @@
 {
   "name": "cns-lib",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Library functions for the Cream & Sugar language",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/jgnewman/cns-lib/issues"
   },
-  "homepage": "https://github.com/jgnewman/cns-lib#readme"
+  "homepage": "https://github.com/jgnewman/cns-lib#readme",
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "mocha": "^3.1.2"
+  }
 }
