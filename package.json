@@ -1,6 +1,6 @@
 {
   "name": "cns-lib",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Library functions for the Cream & Sugar language",
   "main": "index.js",
   "scripts": {

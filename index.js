@@ -1,5 +1,35 @@
 const CNS_ = {
 
+  config: {
+    use: {
+      react: true
+    }
+  },
+
+  getConfig: function (key) {
+    const pieces = key.split('.');
+    var obj = CNS_.config;
+    pieces.every(function (item) {
+      obj = obj[item];
+      return obj !== undefined;
+    });
+    return obj;
+  },
+
+  lang: function (key, val) {
+    const pieces = key.split('.');
+    var obj = CNS_.config;
+    pieces.forEach(function (item, index) {
+      const isLast = index === pieces.length - 1;
+      if (isLast) {
+        obj[item] = val;
+      } else {
+        obj[item] = obj[item] || {};
+        obj = obj[item];
+      }
+    });
+  },
+
   die: function (msg) {
     throw new Error(msg);
   },
@@ -265,7 +295,7 @@ const CNS_ = {
     if (!react && typeof require !== 'undefined') {
       try { react = require('react') } catch (_) { react = null }
     }
-    if (react) return react.createElement(type, a, b);
+    if (react && CNS_.getConfig('use.react')) return react.createElement(type, a, b);
     if (typeof document === 'undefined') CNS_.die('No HTML document is available.');
     const elem = document.createElement(type);
     Object.keys(a).forEach(function (key) {
@@ -309,7 +339,8 @@ const CNS_ = {
 
      // Should only be used on objects that you know for sure only contain
      // functions, objects, and arrays, deeply nested.
-     stringify: function (obj) {
+     // Top signifies we are stringifying at the top level (true/false)
+     stringify: function (obj, top) {
        if (typeof obj === 'function') {
          return obj.toString();
        } else if (typeof obj === 'string') {
@@ -317,9 +348,12 @@ const CNS_ = {
        } else if (obj === true || obj === false) {
          return obj;
        } else if (Array.isArray(obj)) {
-         return '[' + obj.map(function (item) { return CNS_.msgs.stringify(item) }).join(', ') + ']';
+         return '[' + obj.map(function (item) { return CNS_.msgs.stringify(item, false) }).join(', ') + ']';
        } else {
-         return '{' + Object.keys(obj).map(function (key) { return key + ':' + CNS_.msgs.stringify(obj[key]) }).join(',\n') + '}';
+         return '{' + Object.keys(obj).map(function (key) {
+           if (top && key === 'config') return key + ':' + JSON.stringify({use:{react:true}});
+           return key + ':' + CNS_.msgs.stringify(obj[key], false);
+         }).join(',\n') + '}';
        }
      },
 
@@ -380,7 +414,7 @@ const CNS_ = {
 
      Thread: function(fnBody) {
        const isBrowser = typeof navigator !== 'undefined';
-       const body = 'const CNS_ = ' + CNS_.msgs.stringify(CNS_) + ';\n' +
+       const body = 'const CNS_ = ' + CNS_.msgs.stringify(CNS_, true) + ';\n' +
                     'CNS_.msgs.isChild = true;\n' +
                     'CNS_.msgs.handlers = [];\n' +
                     (isBrowser ? 'this.onmessage = CNS_.msgs.onMsg;\n'

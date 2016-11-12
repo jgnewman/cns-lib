@@ -182,4 +182,13 @@ describe('Cream & Sugar Library', function () {
     assert.doesNotThrow(function () { CNS_.debug('') });
   });
 
+  it('should set config options', function () {
+    CNS_.lang('foo.bar', 'baz');
+    assert.equal(CNS_.config.foo.bar, 'baz');
+  });
+
+  it('should retrieve config options', function () {
+    assert.equal(CNS_.getConfig('use.react'), true);
+  });
+
 });
