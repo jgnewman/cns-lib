@@ -295,7 +295,7 @@ const CNS_ = {
     if (!react && typeof require !== 'undefined') {
       try { react = require('react') } catch (_) { react = null }
     }
-    if (react && CNS_.getConfig('use.react')) return react.createElement(type, a, b);
+    if (react && CNS_.getConfig('use.react')) return react.createElement.apply(react, [type, a].concat(b));
     if (typeof document === 'undefined') CNS_.die('No HTML document is available.');
     const elem = document.createElement(type);
     Object.keys(a).forEach(function (key) {
