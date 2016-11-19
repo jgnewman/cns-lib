@@ -134,6 +134,11 @@ describe('Cream & Sugar Library', function () {
     assert.deepEqual(CNS_.update('foo', 'baz', {foo: 'bar'}), {foo: 'baz'});
   });
 
+  it('should update update the existing function when updating a function', function () {
+    function foo() {}
+    assert.equal(CNS_.update('foo', 'bar', foo), foo);
+  });
+
   it('should remove an item from a collection', function () {
     assert.deepEqual(CNS_.remove(1, [1, 2, 3]), [1, 3]);
     assert.deepEqual(CNS_.remove('foo', {foo: 'bar', baz: 'quux'}), {baz: 'quux'});

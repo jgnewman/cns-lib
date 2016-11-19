@@ -260,6 +260,12 @@ const CNS_ = {
       const clone = collection.cloneNode();
       clone[keyOrIndex] = val;
       return clone;
+    } else if (typeof collection === 'function') {
+      // Updating a function allows breaking the functionalism rule only
+      // because JavaScript makes it impossible to clone a function and account
+      // for all necessary cases. This should be avoided where possible.
+      collection[keyOrIndex] = val;
+      return collection;
     } else {
       const replacer = {};
       replacer[keyOrIndex] = val;
