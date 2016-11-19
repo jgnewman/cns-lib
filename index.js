@@ -190,8 +190,8 @@ const CNS_ = {
     return new (Function.prototype.bind.apply(cls, arguments));
   },
 
-  // CNS_.type('hello') -> 'string'
-  type: function (val) {
+  // CNS_.dataType('hello') -> 'string'
+  dataType: function (val) {
     const type = typeof val;
     switch (type) {
       case 'symbol': return 'atom';
