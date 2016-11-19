@@ -86,16 +86,16 @@ describe('Cream & Sugar Library', function () {
   });
 
   it('should intelligently assess types', function () {
-    assert.equal(CNS_.type('foo'), 'string');
-    assert.equal(CNS_.type(0), 'number');
-    assert.equal(CNS_.type(NaN), 'nan');
-    assert.equal(CNS_.type(function () {}), 'function');
-    assert.equal(CNS_.type([]), 'array');
-    assert.equal(CNS_.type({}), 'object');
-    assert.equal(CNS_.type(/a/), 'regexp');
-    assert.equal(CNS_.type(new Date()), 'date');
-    assert.equal(CNS_.type(null), 'null');
-    assert.equal(CNS_.type(CNS_.tuple([0])), 'tuple');
+    assert.equal(CNS_.dataType('foo'), 'string');
+    assert.equal(CNS_.dataType(0), 'number');
+    assert.equal(CNS_.dataType(NaN), 'nan');
+    assert.equal(CNS_.dataType(function () {}), 'function');
+    assert.equal(CNS_.dataType([]), 'array');
+    assert.equal(CNS_.dataType({}), 'object');
+    assert.equal(CNS_.dataType(/a/), 'regexp');
+    assert.equal(CNS_.dataType(new Date()), 'date');
+    assert.equal(CNS_.dataType(null), 'null');
+    assert.equal(CNS_.dataType(CNS_.tuple([0])), 'tuple');
   });
 
   it('should correctly abstract instanceof', function () {
