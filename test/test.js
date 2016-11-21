@@ -196,10 +196,10 @@ describe('Cream & Sugar Library', function () {
     assert.equal(CNS_.getConfig('use.react'), true);
   });
 
-  it('should lazify values', function () {
+  it('should bind and lazify values', function () {
     const context = {};
-    assert.equal(CNS_.lazify(context)(), context);
-    assert.equal(CNS_.lazify(function () { return this }, context)()(), context);
+    assert.equal(CNS_.lazify(context, this)(), context);
+    assert.equal(CNS_.lazify(function () { return this }, context)(), context);
   });
 
 });

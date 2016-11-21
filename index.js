@@ -68,18 +68,17 @@ const CNS_ = {
 
   /**
    * @private
-   * Converts a value to a function that returns that value, bound
-   * to the current context. If the value is a function itself, it is
-   * bound to the current context as well.
+   * Binds a function to the current context. If the value is not a function,
+   * Generates a function that returns the value, bound to the current context.
    *
    * @param  {Any} val      Any value.
    * @param  {Any} context  Any value.
    * @return {Function}     Retrieves `val` and is bound to `context`.
    */
   lazify: function(val, context) {
-    return function () {
-      return typeof val === 'function' ? val.bind(context) : val;
-    }.bind(context);
+    return typeof val === 'function'
+           ? val.bind(context)
+           : function () { return val }.bind(context);
   },
 
   /**
