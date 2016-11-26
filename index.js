@@ -517,19 +517,35 @@ const CNS_ = {
    */
   createElement: function (type, attrs, body) {
     var react;
-    const a = attrs || {}, b = body || [];
-    if (typeof React !== 'undefined') react = React;
-    if (!react && typeof require !== 'undefined') {
-      try { react = require('react') } catch (_) { react = null }
+    const a = attrs || {};
+    const b = body  || [];
+    if (typeof React !== 'undefined') { // If we have React, reference it.
+      react = React;
     }
-    if (react && CNS_.getConfig('use.react')) return react.createElement.apply(react, [type, a].concat(b));
-    if (typeof document === 'undefined') CNS_.die('No HTML document is available.');
-    const elem = document.createElement(type);
+    if (!react && typeof require !== 'undefined') { // If we have require, try to require React.
+      try {
+        react = require('react');
+      } catch (_) {
+        react = null;
+      }
+    }
+    if (react && CNS_.getConfig('use.react')) { // If we have react, pass to React.
+      return react.createElement.apply(react, [type, a].concat(b));
+    }
+    if (typeof document === 'undefined') { // Die if we're not in a browser environment.
+      return CNS_.die('No HTML document is available.');
+    }
+    const elem = document.createElement(type); // Create an element and set attributes.
     Object.keys(a).forEach(function (key) {
-      const cleanKey = key === 'className' ? 'class' : key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-      elem.setAttribute(cleanKey, a[key]);
+      switch (key) {
+        case 'className' : return elem.setAttribute('class', a[key]);
+        case 'htmlFor'   : return elem.setAttribute('for', a[key]);
+        default          : return elem.setAttribute(key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), a[key]);
+      }
     });
-    b.forEach(function (node) { elem.appendChild(node) });
+    b.forEach(function (node) { // Append children.
+      elem.appendChild(node);
+    });
     return elem;
   },
 
