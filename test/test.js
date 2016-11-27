@@ -202,4 +202,11 @@ describe('Cream & Sugar Library', function () {
     assert.equal(CNS_.lazify(function () { return this }, context)(), context);
   });
 
+  it('should dangerously mutate objects', function () {
+    const mutable = {foo: 'bar'};
+    const mutated = CNS_.dangerouslyMutate('foo', 'baz', mutable);
+    assert.equal(mutated, mutable);
+    assert.equal(mutated.foo, 'baz');
+  });
+
 });

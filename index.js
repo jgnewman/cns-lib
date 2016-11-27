@@ -447,6 +447,23 @@ const CNS_ = {
 
   /**
    * @public
+   * Breaks functionalism and mutates a value on an existing object.
+   * Necessary for actions like setting location.href. For example:
+   *
+   *   dangerouslyMutate 'href', '/example', location
+   *
+   * @param  {String|Number} keyOrIndex  Identifies the item to update.
+   * @param  {Any}           val         The new value.
+   * @param  {Collection}    collection  Any collection type.
+   * @return {Collection}                A copy of the original collection.
+   */
+  dangerouslyMutate: function (keyOrIndex, val, collection) {
+    collection[keyOrIndex] = val;
+    return collection;
+  },
+
+  /**
+   * @public
    * Creates a new collection by updating an item in an existing collection.
    * EXCEPTION: If the collection is a function, modifies the existing function.
    *
