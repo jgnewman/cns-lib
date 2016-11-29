@@ -222,4 +222,15 @@ describe('Cream & Sugar Library', function () {
     assert.equal(fn(6), 6);
   });
 
+  it('should block reserved words', function () {
+    assert.equal(CNS_.isReserved('foo'), false);
+    assert.throws(function () { CNS_.isReserved('foo_') });
+  });
+
+  it('should safeguard against reserved words when working with objects', function () {
+    assert.ok(function () { CNS_.get('foo', {foo: 'bar'}) });
+    assert.throws(function () { CNS_.update('foo_', 'baz', {foo_: 'bar'}) });
+    assert.throws(function () { CNS_.remove('foo_', {foo_: 'bar'}) });
+  });
+
 });

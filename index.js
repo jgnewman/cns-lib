@@ -304,6 +304,20 @@ const CNS_ = {
   },
 
   /**
+   * @private
+   * Determines whether a value is reserved and shouldn't be used.
+   *
+   * @param  {Any}     val  Any value.
+   * @return {Boolean}      Whether or not the value is reserved.
+   */
+  isReserved: function (val) {
+    if (typeof val === 'string' && /[^_]_$/.test(val)) {
+      throw new Error('Value ' + val + ' matches a reserved system pattern.');
+    }
+    return false;
+  },
+
+  /**
    * @public
    * Retrieves an item from a collection.
    *
@@ -312,7 +326,7 @@ const CNS_ = {
    * @return {Any}                       The retrieved item.
    */
   get: function (item, collection) {
-    return collection[item];
+    if (!CNS_.isReserved(item)) return collection[item];
   },
 
   /**
@@ -513,6 +527,7 @@ const CNS_ = {
    * @return {Collection}                A copy of the original collection.
    */
   update: function (keyOrIndex, val, collection) {
+    CNS_.isReserved(keyOrIndex);
     if (Array.isArray(collection)) {
       if (CNS_.isTuple(collection) && collection.indexOf(keyorIndex) === -1) {
         CNS_.die('Can not add extra items to tuples.');
@@ -546,6 +561,7 @@ const CNS_ = {
    * @return {Collection}                A copy of the original collection.
    */
   remove: function (keyOrIndex, collection) {
+    CNS_.isReserved(keyOrIndex);
     if (Array.isArray(collection)) {
       if (CNS_.isTuple(collection)) CNS_.die('Can not remove items from tuples.');
       const splicer = collection.slice();
