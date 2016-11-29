@@ -447,6 +447,46 @@ const CNS_ = {
 
   /**
    * @public
+   * Creates a new function that caches its result after being called and will
+   * forever return that same result immediately when called. The function
+   * can also be decached.
+   *
+   * @param  {Function} fn  The function to use as a base for a caching function.
+   * @return {Function}     The caching function.
+   */
+  cache: function (fn) {
+    var executed, storedOutput;
+    var out = function (deCache) {
+      if (deCache === CNS_) {
+        executed = false;
+        storedOutput = undefined;
+      } else if (!executed) {
+        executed = true;
+        storedOutput = fn.apply(null, arguments);
+      }
+      return storedOutput;
+    };
+    out.CNS_isCachedFn_ = true;
+    return out;
+  },
+
+  /**
+   * @public
+   * Decaches a previously cached function. If the provided function is not a
+   * caching function, an error will be triggered.
+   *
+   * @param  {Function} fn  A function generated via a call to `cache`.
+   * @return {undefined}
+   */
+  decache: function (fn) {
+    if (!fn.CNS_isCachedFn_) {
+      throw new Error('Can not decache a non caching function.');
+    }
+    return fn(CNS_);
+  },
+
+  /**
+   * @public
    * Breaks functionalism and mutates a value on an existing object.
    * Necessary for actions like setting location.href. For example:
    *

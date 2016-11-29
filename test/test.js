@@ -209,4 +209,17 @@ describe('Cream & Sugar Library', function () {
     assert.equal(mutated.foo, 'baz');
   });
 
+  it('should create caching functions', function () {
+    const fn = CNS_.cache(function (x) { return x });
+    assert.equal(fn(4), 4);
+    assert.equal(fn(6), 4);
+  });
+
+  it('should decache cached functions', function () {
+    const fn = CNS_.cache(function (x) { return x });
+    fn(4);
+    CNS_.decache(fn);
+    assert.equal(fn(6), 6);
+  });
+
 });
