@@ -52,7 +52,12 @@ const CNS_ = {
    * @return {Boolean}      Whether or not the value is reserved.
    */
   isReserved: function (val) {
-    if (typeof val === 'string' && /[^_]_$/.test(val)) {
+    if (
+      typeof val === 'string'   &&
+      val.length > 1            &&
+      val[val.length-1] === '_' &&
+      val[val.length-2] !== '_' // Let it through if it ends with "__"
+    ) {
       throw new Error('Value ' + val + ' matches a reserved system pattern.');
     }
     return false;
@@ -210,9 +215,8 @@ const CNS_ = {
     return function () {
       if (arguments.length === arity) {
         return fun.apply(undefined, arguments);
-      } else {
-        CNS_.die('Function ' + (fun.name || '') + ' called with wrong arity. Expected ' + arity + ' got ' + arguments.length + '.');
       }
+      CNS_.die('Function ' + (fun.name || '') + ' called with wrong arity. Expected ' + arity + ' got ' + arguments.length + '.');
     };
   },
 
@@ -278,23 +282,26 @@ const CNS_ = {
     var react;
     const a = attrs || {};
     const b = body  || [];
-    if (typeof React !== 'undefined') { // If we have React, reference it.
-      react = React;
-    }
-    if (!react && typeof require !== 'undefined') { // If we have require, try to require React.
+    // If we have React, reference it.
+    typeof React !== 'undefined' && (react = React);
+    // If we have require, try to require React.
+    if (!react && typeof require !== 'undefined') {
       try {
         react = require('react');
       } catch (_) {
         react = null;
       }
     }
-    if (react && CNS_.getConfig('use.react')) { // If we have react, pass to React.
+    // If we have react, pass to React. End.
+    if (react && CNS_.getConfig('use.react')) {
       return react.createElement.apply(react, [type, a].concat(b));
     }
-    if (typeof document === 'undefined') { // Die if we're not in a browser environment.
+    // Die if we're not in a browser environment.
+    if (typeof document === 'undefined') {
       return CNS_.die('No HTML document is available.');
     }
-    const elem = document.createElement(type); // Create an element and set attributes.
+    // Create an element and set attributes.
+    const elem = document.createElement(type);
     Object.keys(a).forEach(function (key) {
       switch (key) {
         case 'className' : return elem.setAttribute('class', a[key]);
@@ -302,7 +309,8 @@ const CNS_ = {
         default          : return elem.setAttribute(key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), a[key]);
       }
     });
-    b.forEach(function (node) { // Append children.
+    // Append children.
+    b.forEach(function (node) {
       elem.appendChild(node);
     });
     return elem;
@@ -371,9 +379,10 @@ const CNS_ = {
    * Tries to fall back to console.log.
    */
   debug: function () {
-    return typeof console !== 'undefined' && typeof console.debug === 'function'
-      ? console.debug.apply(console, arguments)
-      : CNS_.log.apply(null, arguments);
+    if (typeof console !== 'undefined' && typeof console.debug === 'function') {
+      return console.debug.apply(console, arguments);
+    }
+    return CNS_.log.apply(null, arguments);
   },
 
   /**
@@ -508,7 +517,8 @@ const CNS_ = {
    */
   lead: function (list) {
     const out = list.slice(0, list.length - 1);
-    return CNS_.isTuple(list) ? CNS_.tuple(out) : out;
+    if (CNS_.isTuple(list)) return CNS_.tuple(out);
+    return out;
   },
 
   /**
@@ -516,9 +526,9 @@ const CNS_ = {
    * Shorcuts console.log but only if it exists.
    */
   log: function () {
-    return typeof console !== 'undefined' && typeof console.log === 'function'
-      ? console.log.apply(console, arguments)
-      : undefined;
+    if (typeof console !== 'undefined' && typeof console.log === 'function') {
+      return console.log.apply(console, arguments);
+    }
   },
 
   /**
@@ -582,7 +592,8 @@ const CNS_ = {
    */
   tail: function (list) {
     const out = list.slice(1);
-    return CNS_.isTuple(list) ? CNS_.tuple(out) : out;
+    if (CNS_.isTuple(list)) return CNS_.tuple(out);
+    return out;
   },
 
   /**
@@ -667,9 +678,10 @@ const CNS_ = {
    * Tries to fall back to console.log.
    */
   warn: function () {
-    return typeof console !== 'undefined' && typeof console.warn === 'function'
-      ? console.warn.apply(console, arguments)
-      : CNS_.log.apply(null, arguments);
+    if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+      return console.warn.apply(console, arguments);
+    }
+    return CNS_.log.apply(null, arguments);
   },
 
 
