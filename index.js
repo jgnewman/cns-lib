@@ -16,6 +16,29 @@ const CNS_ = {
 
   /**
    * @private
+   * Wrapper/polyfill for Object.assign that always returns a new object.
+   *
+   * @param {Object} base   The base object to begin with.
+   * @param {Object} toAdd  Properties to add to the base.
+   *
+   * @return {Object}       Contains all of the properties.
+   */
+  assign: function (base, toAdd) {
+    if (typeof Object.assign !== 'function') {
+      const out = {};
+      Object.keys(base).forEach(function (key) { out[key] = base[key] });
+      Object.keys(toAdd).forEach(function (key) { out[key] = toAdd[key] });
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        Object.getOwnPropertySymbols(base).forEach(function (sym) { out[sym] = base[sym] });
+        Object.getOwnPropertySymbols(toAdd).forEach(function (sym) { out[sym] = toAdd[sym] });
+      }
+      return out;
+    }
+    return Object.assign({}, base, toAdd);
+  },
+
+  /**
+   * @private
    * Converts `arguments` to an array.
    *
    * @param  {Arguments} args  Any `arguments` object.

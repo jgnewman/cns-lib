@@ -233,4 +233,17 @@ describe('Cream & Sugar Library', function () {
     assert.throws(function () { CNS_.remove('foo_', {foo_: 'bar'}) });
   });
 
+  it('should assign keys to new objects', function () {
+    assert.deepEqual(CNS_.assign({
+      foo: 'bar',
+      [Symbol.for('foo')]: 'foo'
+    }, {
+      baz: 'quux'
+    }), {
+      foo: 'bar',
+      baz: 'quux',
+      [Symbol.for('foo')]: 'foo'
+    });
+  });
+
 });
