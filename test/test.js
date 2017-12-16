@@ -279,8 +279,4 @@ describe('Cream & Sugar Library', function () {
     assert.equal(klass.baz, undefined);
   });
 
-  it('should create a react class', function () {
-    assert.equal(typeof CNS_.createReactClass({ render: function(){} }), 'function');
-  });
-
 });

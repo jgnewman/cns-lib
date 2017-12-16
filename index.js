@@ -381,29 +381,6 @@ var CNS_ = {
 
   /**
    * @public
-   * Creates a React class.
-   *
-   * @param  {Object} values The methods used to create the class.
-   * @return {Class}         The new React class.
-   */
-  createReactClass: function (values) {
-    var createClass;
-    var err = "Using createReactClass requires the create-react-class module.";
-    if (typeof createReactClass === 'undefined') {
-      if (typeof require === 'undefined') return CNS_.die(err);
-      try {
-        createClass = require('create-react-class');
-      } catch (_) {
-        return CNS_.die(err);
-      }
-    } else {
-      createClass = createReactClass;
-    }
-    return createClass(values);
-  },
-
-  /**
-   * @public
    * Breaks functionalism and mutates a value on an existing object.
    * Necessary for actions like setting location.href. For example:
    *
