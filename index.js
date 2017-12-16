@@ -280,6 +280,15 @@ var CNS_ = {
     return out;
   },
 
+  /**
+   * @public
+   * Creates and extends basic classes.
+   *
+   * @param {Class (Function)} ext    Optional. A class to extend.
+   * @param {Object}           proto  The new prototype methods.
+   * @param {Object}           stat   Optional. Any static methods to include.
+   * @return                          The new class.
+   */
   classof: function (ext, proto, stat) {
     // Allow the extension class to be optional
     if (typeof ext !== 'function') {
@@ -368,6 +377,29 @@ var CNS_ = {
       elem.appendChild(node);
     });
     return elem;
+  },
+
+  /**
+   * @public
+   * Creates a React class.
+   *
+   * @param  {Object} values The methods used to create the class.
+   * @return {Class}         The new React class.
+   */
+  createReactClass: function (values) {
+    var createClass;
+    var err = "Using createReactClass requires the create-react-class module.";
+    if (typeof createReactClass === 'undefined') {
+      if (typeof require === 'undefined') return CNS_.die(err);
+      try {
+        createClass = require('create-react-class');
+      } catch (_) {
+        return CNS_.die(err);
+      }
+    } else {
+      createClass = createReactClass;
+    }
+    return createClass(values);
   },
 
   /**
