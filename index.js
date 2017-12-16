@@ -1,4 +1,4 @@
-const CNS_ = {
+var CNS_ = {
 
   /*************************************************
    * All private functions will go at the top
@@ -280,6 +280,37 @@ const CNS_ = {
     return out;
   },
 
+  classof: function (ext, proto, stat) {
+    // Allow the extension class to be optional
+    if (typeof ext !== 'function') {
+      stat = proto;
+      proto = ext;
+      ext = null;
+    }
+    var Class = (proto && typeof proto.constructor === 'function') ? proto.constructor : function () {};
+    var extProto;
+    // Mix in the prototype from the extension
+    if (ext) {
+      extProto = Object.getOwnPropertyNames(ext.prototype);
+      extProto.forEach(function (key) {
+        key !== 'constructor' && (Class.prototype[key] = ext.prototype[key]);
+      });
+    }
+    // Mix in the new prototype
+    if (proto) {
+      Object.keys(proto).forEach(function (key) {
+        key !== 'constructor' && (Class.prototype[key] = proto[key]);
+      });
+    }
+    // Mix in static methods
+    if (stat) {
+      Object.keys(stat).forEach(function (key) {
+        Class[key] = stat[key];
+      });
+    }
+    return Class;
+  },
+
   /**
    * @public
    * Creates a `new` object.
@@ -556,6 +587,12 @@ const CNS_ = {
 
   /**
    * @public
+   * A nice noop function included for you.
+   */
+  noop: function () {},
+
+  /**
+   * @public
    * Selects a random item from a list type colelction.
    *
    * @param  {Array|Tuple|String} list  Any list type.
@@ -691,7 +728,7 @@ const CNS_ = {
     } else {
       const replacer = {};
       replacer[keyOrIndex] = val;
-      return Object.assign({}, collection, replacer);
+      return CNS_.assign(collection, replacer);
     }
   },
 

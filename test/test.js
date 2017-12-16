@@ -246,4 +246,37 @@ describe('Cream & Sugar Library', function () {
     });
   });
 
+  it('should provide a noop', function () {
+    assert.ok(typeof CNS_.noop === 'function');
+    assert.equal(CNS_.noop(), undefined);
+  });
+
+  it('should create classes', function () {
+    var Klass = CNS_.classof({ foo: function(){return'foo'} });
+    var klass = new Klass();
+    assert.equal(klass.foo(), 'foo');
+  });
+
+  it('should extend classes', function () {
+    var Klass1 = CNS_.classof({ foo: function(){return'foo'} });
+    var Klass2 = CNS_.classof(Klass1, { bar: function(){return'bar'} });
+    var klass = new Klass2();
+    assert.equal(klass.foo(), 'foo');
+    assert.equal(klass.bar(), 'bar');
+  });
+
+  it('should apply static methods to extended classes', function () {
+    var Klass1 = CNS_.classof({ foo: function(){return'foo'} });
+    var Klass2 = CNS_.classof(
+      Klass1,
+      { bar: function(){return'bar'} },
+      { baz: function(){return'baz'} }
+    );
+    var klass = new Klass2();
+    assert.equal(klass.foo(), 'foo');
+    assert.equal(klass.bar(), 'bar');
+    assert.equal(Klass2.baz(), 'baz');
+    assert.equal(klass.baz, undefined);
+  });
+
 });
